@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: meteo_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: data_user
+      POSTGRES_PASSWORD: data_password_2026
+      POSTGRES_DB: meteo_analysis
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Notre outil de Dataviz Metabase simplifié et stable
+  metabase:
+    image: metabase/metabase:latest
+    container_name: meteo_metabase
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_db
+    volumes:
+      - metabase_data:/metabase-data
+
+volumes:
+  postgres_data:
+  metabase_data:
